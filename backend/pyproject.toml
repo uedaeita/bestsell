@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "backend"
+version = "1.0.0"
+description = ""
+authors = ["uedaeita <eitaro.ueda@gmail.com>"]
+packages = [{ include="app", from="." }]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.11"
+alembic = "^1.7.1"
+beautifulsoup4 = "^4.9.3"
+fastapi = "^0.68.1"
+lxml = "^4.6.3"
+mysqlclient = "^2.0.3"
+numpy = "^1.21.2"
+opencv-python = "^4.5.3"
+psycopg2-binary = "^2.9.1"
+PyYAML = "^5.4.1"
+requests = "^2.26.0"
+uvicorn = {extras = ["standard"], version = "^0.15.0"}
+wget = "^3.2"
+
+[tool.poetry.dev-dependencies]
+autoflake = "^1.4"
+black = "^21.8b0"
+debugpy = "^1.4.1"
+flake8 = "^3.9.2"
+isort = "^5.9.3"
+mypy = "^0.910"
+pytest = "^6.2.5"
+types-PyYAML = "^5.4.10"
+types-requests = "^2.25.6"
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+line_length = 140
+skip = ["__init__.py"]
+
+[tool.mypy]
+plugins = ["pydantic.mypy"]
+ignore_missing_imports = true
+disallow_untyped_defs = true
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

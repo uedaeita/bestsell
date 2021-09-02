@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  web:
+    image: nginx:1.21.1-alpine
+    ports:
+      - 80:80
+    volumes:
+      - ./middleware/nginx/services.d:/etc/nginx/services.d
+      - ./middleware/nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - backend
+      - frontend
+
+  db:
+    image: postgres:12
+    volumes:
+      - ./postgres/init:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_DB: bestsell
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: test
+      POSTGRES_INITDB_ARGS: --encoding=UTF-8
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - 5432:5432
+    hostname: postgres
+    user: root
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - 5678:5678
+      - 8000:8000
+    dns:
+      - 8.8.8.8
+    volumes:
+      - ./backend:/opt/backend
+    command: dev
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/var/www
+      - /var/www/node_modules
+      - /var/www/.next
+    command: dev

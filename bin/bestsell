@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+#> Utility commands for bestsell
+#>
+#> bestsell <command>
+#>
+#> COMMANDS:
+#>     bestsell backend
+#>     bestsell frontend
+#>     bestsell db
+
+set -eu
+set -o pipefail
+
+readonly CWD="$(cd -P -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+
+#  Utils
+#-----------------------------------------------
+do_help() {
+    cat "$0" | sed -n -E '/^#>/s/^#>[ ]?//p'
+    exit 1
+}
+
+access_container() {
+    local _name="$1"
+    local _cmd="$2"
+    docker container exec -it `docker container ps -qf name=${_name}` ${_cmd}
+}
+
+#  Commands
+#-----------------------------------------------
+
+backend() {
+    access_container "backend" "/bin/bash"
+}
+
+frontend() {
+    access_container "frontend" "/bin/ash"
+}
+
+db() {
+    # @see https://www.geeksforgeeks.org/postgresql-psql-commands for psql commands
+    access_container "db" "psql -d bestsell"
+}
+
+#  Entrypoint
+#-----------------------------------------------
+COMMAND="${1:-}"
+shift || true
+
+case "$COMMAND" in
+    backend)  backend ;;
+    frontend) frontend ;;
+    db)       db ;;
+    *)        do_help ;;
+esac
