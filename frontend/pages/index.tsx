@@ -1,19 +1,25 @@
 import type { NextPage } from 'next'
 import React from 'react'
-import Image from 'next/image'
-import { Container, AppBar, IconButton, Toolbar, Typography } from '@material-ui/core'
+import { Container, AppBar, IconButton, Toolbar, Typography, Card, CardActionArea, CardContent, CardMedia } from '@material-ui/core'
 import { AccountCircle, Menu } from '@material-ui/icons';
 import { useEcommerces } from '@/hooks/ecommerce';
+import { useRouter } from 'next/dist/client/router';
 
 const Home: NextPage = () => {
+  const router = useRouter();
+
   const { data: ecommerces, isLoading } = useEcommerces();
+
+  const handleClick = () => {
+    router.push('/mercari');
+  };
 
   if (isLoading) return null;
 
   return (
     <Container maxWidth="xl" disableGutters>
       <div className="flex-grow">
-        <AppBar position="static">
+        <AppBar position="static" color="primary">
           <Toolbar>
             <IconButton edge="start" className="mr-4" color="inherit" aria-label="menu">
               <Menu />
@@ -38,20 +44,20 @@ const Home: NextPage = () => {
           <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
             {
               ecommerces && ecommerces.map(ecommerce => (
-                <a href="/bestsell/mercari" className="group" key={ecommerce.code}>
-                  <div className="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
-                    <Image
-                      src={`/images/ecommerces/${ecommerce.code}.svg`}
-                      alt={ecommerce.name}
-                      className="w-full h-full object-center object-cover group-hover:opacity-75"
-                      width="64"
-                      height="64"
+                <Card key={ecommerce.id} className="max-w-xs" onClick={handleClick}>
+                  <CardActionArea>
+                    <CardMedia
+                      className="h-32 bg-cover"
+                      image={`/bestsell/images/ecommerces/${ecommerce.code}.png`}
+                      title={ecommerce.name}
                     />
-                  </div>
-                  <h3 className="mt-4 text-sm text-gray-700">
-                    {ecommerce.name}
-                  </h3>
-                </a>
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="h2">
+                      {ecommerce.name}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
               ))
             }
           </div>
