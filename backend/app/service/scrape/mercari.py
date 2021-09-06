@@ -144,7 +144,7 @@ class Mercari:
         is_within = True
         times = soup.find_all("time")
         if len(times) == 0:
-            return None, is_within
+            return "N/A", is_within
 
         commented_at = times[-1].find("span").text
 
