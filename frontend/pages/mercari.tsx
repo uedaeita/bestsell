@@ -25,7 +25,7 @@ const SORT_OPTIONS = [
   { id: 1, value: '', label: '並び替え' },
   { id: 2, value: 'price_asc', label: '価格の安い順' },
   { id: 3, value: 'price_desc', label: '価格の高い順' },
-  { id: 4, value: 'created_asc', label: '出品の新しい順' },
+  { id: 4, value: 'created_desc', label: '出品の新しい順' },
   { id: 5, value: 'like_desc', label: 'いいね!の多い順' }
 ];
 
@@ -122,6 +122,25 @@ const Mercari: NextPage = () => {
       params = { ...params, category_grand_child: null };
     }
     setState({ ...state, ...params });
+  };
+
+  const handleClear = () => {
+    setState({
+      sort_order: null,
+      keyword: '',
+      category_root: null,
+      category_child: null,
+      category_grand_child: null,
+      brand_name: '',
+      price_min: null,
+      price_max: null,
+      item_condition_id: null,
+      shipping_payer_id: null,
+      status_on_sale: false,
+      status_trading_sold_out: true,
+      max_hit_items: 100,
+      last_comment_within: 7
+    });
   };
 
   const handleSearch = () => {
@@ -356,7 +375,9 @@ const Mercari: NextPage = () => {
                 label="売り切れ"
               />
             </FormGroup>
-            <div></div>
+            <Button variant="contained" color="primary" onClick={handleClear}>
+              クリア
+            </Button>
             <Button variant="contained" color="primary" onClick={handleSearch}>
               検索
             </Button>
