@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import { Product, SearchArgs, SortOrder } from '@/types/product';
 import React, { useState } from 'react'
 import { Container, AppBar, Toolbar, IconButton, Typography, FormControl, Input, InputLabel, MenuItem, Select, TextField, Checkbox, FormControlLabel, FormGroup, Button, LinearProgress } from '@material-ui/core';
-import { GridOverlay, DataGrid, GridColDef } from '@mui/x-data-grid';
+import { GridOverlay, DataGrid, GridColDef, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import { AccountCircle, Menu } from '@material-ui/icons';
 import { useMercariCategory } from '@/hooks/mercariCategory';
 import { getMercariProducts } from '@/hooks/product';
@@ -71,7 +71,7 @@ const columns: GridColDef[] = [
   { field: 'url', headerName: '商品ページURL', type: 'string', width: 200 },
   { field: 'url_photo', headerName: '画像URL', type: 'string', width: 200 },
   { field: 'price', headerName: '値段', type: 'number', width: 120 },
-  { field: 'desc', headerName: '説明', width: 400 },
+  { field: 'desc', headerName: '説明', width: 400, disableExport: true },
 ];
 
 export const CustomLoadingOverlay = (): JSX.Element => (
@@ -80,6 +80,12 @@ export const CustomLoadingOverlay = (): JSX.Element => (
       <LinearProgress />
     </div>
   </GridOverlay>
+);
+
+export const CustomToolbar = () => (
+  <GridToolbarContainer>
+    <GridToolbarExport />
+  </GridToolbarContainer>
 );
 
 const Mercari: NextPage = () => {
@@ -386,7 +392,10 @@ const Mercari: NextPage = () => {
               getRowId={row => row.url}
               columns={columns}
               rows={products}
-              components={{ LoadingOverlay: CustomLoadingOverlay }}
+              components={{
+                LoadingOverlay: CustomLoadingOverlay,
+                Toolbar: CustomToolbar
+              }}
               loading={isLoading}
             />
           </div>
