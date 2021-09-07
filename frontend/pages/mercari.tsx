@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import { Product, SearchArgs, SortOrder } from '@/types/product';
 import React, { useState } from 'react'
 import { Container, AppBar, Toolbar, IconButton, Typography, FormControl, Input, InputLabel, MenuItem, Select, TextField, Checkbox, FormControlLabel, FormGroup, Button, LinearProgress } from '@material-ui/core';
-import { GridOverlay, DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { GridOverlay, DataGrid, GridColDef, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import { AccountCircle, Menu } from '@material-ui/icons';
 import { useMercariCategory } from '@/hooks/mercariCategory';
 import { getMercariProducts } from '@/hooks/product';
@@ -46,23 +46,21 @@ const SHIPPING_PAYER_OPTIONS = [
 ];
 
 const MAX_HIT_ITEM_OPTIONS = [
-  { id: 1, value: 25, label: '25件まで' },
-  { id: 2, value: 50, label: '50件まで' },
-  { id: 3, value: 100, label: '100件まで' },
-  { id: 4, value: 200, label: '200件まで' },
-  { id: 5, value: 300, label: '300件まで' },
-  { id: 6, value: 400, label: '400件まで' },
-  { id: 7, value: 500, label: '500件まで' },
-  { id: 8, value: 1000, label: '500件まで' },
-  { id: 9, value: 10000, label: '500件まで' },
+  { id: 1, value: 100, label: '100件まで' },
+  { id: 2, value: 200, label: '200件まで' },
+  { id: 3, value: 300, label: '300件まで' },
+  { id: 4, value: 400, label: '400件まで' },
+  { id: 5, value: 500, label: '500件まで' },
+  { id: 6, value: 1000, label: '1,000件まで' },
+  { id: 7, value: 10000, label: '10,000件まで' },
 ];
 
 const LAST_COMMENT_WITHIN_OPTIONS = [
   { id: 1, value: 1, label: '1日以内' },
-  { id: 1, value: 7, label: '1週間以内' },
-  { id: 1, value: 14, label: '2週間以内' },
-  { id: 1, value: 30, label: '1ヶ月以内' },
-  { id: 1, value: 365, label: '1年以内' },
+  { id: 2, value: 7, label: '1週間以内' },
+  { id: 3, value: 14, label: '2週間以内' },
+  { id: 4, value: 30, label: '1ヶ月以内' },
+  { id: 5, value: 365, label: '1年以内' },
 ];
 
 const columns: GridColDef[] = [
@@ -73,7 +71,7 @@ const columns: GridColDef[] = [
   { field: 'url', headerName: '商品ページURL', type: 'string', width: 200 },
   { field: 'url_photo', headerName: '画像URL', type: 'string', width: 200 },
   { field: 'price', headerName: '値段', type: 'number', width: 120 },
-  { field: 'desc', headerName: '説明', width: 400 },
+  { field: 'desc', headerName: '説明', width: 400, disableExport: true },
 ];
 
 export const CustomLoadingOverlay = (): JSX.Element => (
@@ -82,6 +80,12 @@ export const CustomLoadingOverlay = (): JSX.Element => (
       <LinearProgress />
     </div>
   </GridOverlay>
+);
+
+export const CustomToolbar = () => (
+  <GridToolbarContainer>
+    <GridToolbarExport />
+  </GridToolbarContainer>
 );
 
 const Mercari: NextPage = () => {
@@ -94,11 +98,11 @@ const Mercari: NextPage = () => {
     brand_name: '',
     price_min: null,
     price_max: null,
-    item_condition_id: null,
-    shipping_payer_id: null,
+    item_condition_id: 2,
+    shipping_payer_id: 3,
     status_on_sale: false,
     status_trading_sold_out: true,
-    max_hit_items: 100,
+    max_hit_items: 500,
     last_comment_within: 7
   });
   const [products, setProducts] = useState<Product[]>([]);
@@ -134,13 +138,14 @@ const Mercari: NextPage = () => {
       brand_name: '',
       price_min: null,
       price_max: null,
-      item_condition_id: null,
-      shipping_payer_id: null,
+      item_condition_id: 2,
+      shipping_payer_id: 3,
       status_on_sale: false,
       status_trading_sold_out: true,
       max_hit_items: 100,
       last_comment_within: 7
     });
+    setProducts([]);
   };
 
   const handleSearch = () => {
@@ -375,10 +380,10 @@ const Mercari: NextPage = () => {
                 label="売り切れ"
               />
             </FormGroup>
-            <Button variant="contained" color="primary" onClick={handleClear}>
+            <Button variant="contained" color="secondary" disabled={isLoading} onClick={handleClear}>
               クリア
             </Button>
-            <Button variant="contained" color="primary" onClick={handleSearch}>
+            <Button variant="contained" color="primary" disabled={isLoading} onClick={handleSearch}>
               検索
             </Button>
           </div>
@@ -387,7 +392,10 @@ const Mercari: NextPage = () => {
               getRowId={row => row.url}
               columns={columns}
               rows={products}
-              components={{ LoadingOverlay: CustomLoadingOverlay }}
+              components={{
+                LoadingOverlay: CustomLoadingOverlay,
+                Toolbar: CustomToolbar
+              }}
               loading={isLoading}
             />
           </div>
