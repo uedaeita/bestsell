@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 
 
 class SortOrder(str, Enum):
+    DEFAULT = ""
     PRICE_ASC = "price_asc"
     PRICE_DESC = "price_desc"
     CREATED_DESC = "created_desc"
@@ -26,7 +27,7 @@ class SearchArgs(BaseModel):
     class Config:
         orm_mode = True
 
-    sort_order: Optional[SortOrder] = Field(None, description="並び替え")
+    sort_order: Optional[SortOrder] = Field(SortOrder.DEFAULT, description="並び替え")
     keyword: Optional[str] = Field(None, description="検索キーワード")
     category_root: Optional[int] = Field(None, description="カテゴリーID")
     category_child: Optional[int] = Field(None, description="サブカテゴリーID")
