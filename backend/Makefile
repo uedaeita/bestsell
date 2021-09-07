@@ -4,13 +4,18 @@
 
 POETRY = poetry
 RUN = @$(POETRY) run
-PYTHON = @$(RUN) python
+
+ifeq ($(ENV), LOCAL)
+	PYTHON = @$(RUN) python
+else
+	PYTHON = python
+endif
 
 #-----------------------------------------
 # TARGETS
 #-----------------------------------------
 
-.PHONY: install migrate dev debug test lint isort autoflake black mypy
+.PHONY: install migrate seed dev debug test lint isort autoflake black mypy
 
 install:
 	@$(POETRY) install
