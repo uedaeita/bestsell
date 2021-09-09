@@ -1,5 +1,14 @@
 # BestSell
 
+Find out best sold items and whatnots on Mercari with unofficial API.
+
+- Frontend  : Next.js
+- Backend   : Python
+- Web server: Nginx
+- Database  : PostgreSQL
+
+All in docker.
+
 ## Get Started
 
 ### Install Docker Desktop
