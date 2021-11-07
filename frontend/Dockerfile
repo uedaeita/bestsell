@@ -1,8 +1,9 @@
-FROM node:alpine
+FROM node:16.13.0-alpine
 
 RUN mkdir -p /var/www
 
 ENV PORT 3000
+ENV NODE_OPTIONS --max-old-space-size=2048
 
 WORKDIR /var/www
 

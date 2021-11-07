@@ -1,4 +1,4 @@
-FROM python:3.9.6-slim AS builder
+FROM --platform=linux/amd64 python:3.9.7-slim AS builder
 
 WORKDIR /opt/backend
 
@@ -9,9 +9,9 @@ COPY pyproject.toml poetry.lock ./
 RUN poetry export --dev -f requirements.txt > requirements.txt
 
 
-FROM python:3.9.6-slim
+FROM --platform=linux/amd64 python:3.9.7-slim
 
-ENV POETRY_VERSION=1.1.8
+ENV POETRY_VERSION=1.1.11
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /opt/backend
